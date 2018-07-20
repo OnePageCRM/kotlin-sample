@@ -1,0 +1,37 @@
+buildscript {
+    ext.versions = [
+            'kotlin'  : '1.2.30',
+            'java'    : '1.8',
+
+            'junit'   : '4.12',
+            'retrofit': '2.4.0',
+            'okhttp'  : '3.9.0',
+            'gson'    : '2.8.0',
+
+            'release' : '1.0',
+    ]
+
+    ext.deps = [
+            'gradleplugin': 'org.jetbrains.kotlin:kotlin-gradle-plugin',
+            'kotlinstdlib': 'org.jetbrains.kotlin:kotlin-stdlib-jdk8',
+            'okhttp'      : 'com.squareup.okhttp3:okhttp'
+    ]
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        classpath "$deps.gradleplugin:$versions.kotlin"
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+        google()
+    }
+}

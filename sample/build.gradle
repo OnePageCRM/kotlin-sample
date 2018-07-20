@@ -1,0 +1,21 @@
+group = 'com.onepagecrm'
+version = '1.0'
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation "$deps.kotlinstdlib:$versions.kotlin"
+    testImplementation group: 'junit', name: 'junit', version: "$versions.junit"
+    implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
+}
+
+sourceCompatibility = versions.java
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "$versions.java"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "$versions.java"
+}
