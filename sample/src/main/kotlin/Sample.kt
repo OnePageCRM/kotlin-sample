@@ -22,6 +22,7 @@ fun main(args: Array<String>) {
 
     println("username: $username\npassword: $password\n")
 
+    // Log in
     val onePageAPI = OnePageAPI.create()
     val loginCall = onePageAPI.loginAsync(LoginForm(username, password))
     val loginResponse = loginCall.execute()
@@ -41,12 +42,15 @@ fun main(args: Array<String>) {
 
     println("loggedUser: $loggedUser\n")
 
+    // Set up data for authentication
     OnePageAPI.setAuthData(loggedUser.id, loggedUser.authKey)
 
+    // List contacts
     val contactsCall = onePageAPI.contactsAsync()
     val contactsResponse = contactsCall.execute()
     println("contacts: ${contactsResponse.body()}\n")
 
+    // Save contact
     val contactForm = ContactForm("Kotlin", "Sample", "OnePageCRM")
     val contactCall = onePageAPI.contactsAsync(contactForm)
     val contactResponse = contactCall.execute()
