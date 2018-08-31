@@ -16,6 +16,24 @@ import retrofit2.http.POST
 
 interface OnePageAPI {
 
+    @POST("login.json")
+    fun login(@Body loginForm: LoginForm): LoginResponse
+
+    @POST("login.json")
+    fun loginAsync(@Body loginForm: LoginForm): Call<LoginResponse>
+
+    @GET("contacts.json")
+    fun contacts(): ContactsResponse
+
+    @GET("contacts.json")
+    fun contactsAsync(): Call<ContactsResponse>
+
+    @POST("contacts.json")
+    fun contacts(@Body contactForm: ContactForm): ContactResponse
+
+    @POST("contacts.json")
+    fun contactsAsync(@Body contactForm: ContactForm): Call<ContactResponse>
+
     companion object Factory {
 
         // URLs
@@ -24,8 +42,6 @@ interface OnePageAPI {
 
         // Headers
         private const val USER_AGENT_HEADER = "User-Agent"
-        private val SYSTEM_USER_AGENT = System.getProperty("http.agent")
-        private val USER_AGENT = if (SYSTEM_USER_AGENT.isNullOrEmpty()) "Java/1.8" else SYSTEM_USER_AGENT
         private const val SOURCE_HEADER = "X-OnePageCRM-SOURCE"
         private const val SOURCE = "kotlin-sample"
         private const val AUTHORIZATION_HEADER = "Authorization"
@@ -34,6 +50,7 @@ interface OnePageAPI {
         var userId: String = ""
         var authKey: String = ""
 
+        // Singleton
         fun create(): OnePageAPI {
             val retrofit = Retrofit.Builder()
                     .baseUrl(API_URL)
@@ -41,6 +58,11 @@ interface OnePageAPI {
                     .client(client())
                     .build()
             return retrofit.create(OnePageAPI::class.java)
+        }
+
+        fun setAuthData(userId: String, authKey: String) {
+            this.userId = userId
+            this.authKey = authKey
         }
 
         private fun client(): OkHttpClient {
@@ -59,42 +81,24 @@ interface OnePageAPI {
         private fun headers(): Interceptor {
             return Interceptor {
                 val request = it.request().newBuilder()
-                        .addHeader(USER_AGENT_HEADER, USER_AGENT)
+                        .addHeader(USER_AGENT_HEADER, userAgent())
                         .addHeader(SOURCE_HEADER, SOURCE)
                         .addHeader(AUTHORIZATION_HEADER, authentication())
                         .build()
-                println("$USER_AGENT_HEADER: $USER_AGENT")
+                println("$USER_AGENT_HEADER: ${userAgent()}")
                 println("$SOURCE_HEADER: $SOURCE")
                 println("$AUTHORIZATION_HEADER: ${authentication()}")
                 it.proceed(request)
             }
         }
 
-        fun setAuthData(userId: String, authKey: String) {
-            this.userId = userId
-            this.authKey = authKey
+        private fun userAgent(): String {
+            val systemAgent = System.getProperty("http.agent")
+            return if (systemAgent.isNullOrEmpty()) "Java/1.8" else systemAgent
         }
 
         private fun authentication(): String {
             return if (userId.isNotEmpty() && authKey.isNotEmpty()) Credentials.basic(userId, authKey) else ""
         }
     }
-
-    @POST("login.json")
-    fun login(@Body loginForm: LoginForm): LoginResponse
-
-    @POST("login.json")
-    fun loginAsync(@Body loginForm: LoginForm): Call<LoginResponse>
-
-    @GET("contacts.json")
-    fun contacts(): ContactsResponse
-
-    @GET("contacts.json")
-    fun contactsAsync(): Call<ContactsResponse>
-
-    @POST("contacts.json")
-    fun contacts(@Body contactForm: ContactForm): ContactResponse
-
-    @POST("contacts.json")
-    fun contactsAsync(@Body contactForm: ContactForm): Call<ContactResponse>
 }
