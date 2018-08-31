@@ -4,6 +4,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 /**
@@ -41,4 +42,10 @@ interface OnePageAPI {
 
     @POST("login.json")
     fun loginAsync(@Body loginForm: LoginForm): Call<LoginResponse>
+
+    @GET("contacts.json")
+    fun contacts(): ContactsResponse
+
+    @GET("contacts.json")
+    fun contactsAsync(): Call<ContactsResponse>
 }

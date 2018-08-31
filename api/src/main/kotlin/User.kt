@@ -6,12 +6,12 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class User(
-        @SerializedName("id") private var id: String,
-        @SerializedName("auth_key") private var authKey: String,
-        @SerializedName("first_name") private var first: String,
-        @SerializedName("last_name") private var last: String,
-        @SerializedName("company_name") private var company: String) {
+        @SerializedName("id") val id: String,
+        @SerializedName("auth_key") val authKey: String,
+        @SerializedName("first_name") val first: String,
+        @SerializedName("last_name") val last: String,
+        @SerializedName("company_name") val company: String) {
     init {
-        require(id.isNotBlank(), { "User needs id to be valid" })
+        require(id.isNotBlank()) { "User needs id to be valid" }
     }
 }

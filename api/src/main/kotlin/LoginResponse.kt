@@ -6,16 +6,16 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class LoginResponse(
-        @SerializedName("status") private val status: Int,
-        @SerializedName("message") private val message: String,
-        @SerializedName("timestamp") private val timestamp: Long,
-        @SerializedName("data") private val data: LoginData) {
+        @SerializedName("status") val status: Int,
+        @SerializedName("message") val message: String,
+        @SerializedName("timestamp") val timestamp: Long,
+        @SerializedName("data") val data: LoginData) {
 
     data class LoginData(
-            @SerializedName("id") private var id: String,
-            @SerializedName("auth_key") private var authKey: String,
-            @SerializedName("user") private var loggedUser: LoggedUser)
+            @SerializedName("user_id") val userId: String,
+            @SerializedName("auth_key") val authKey: String,
+            @SerializedName("user") val loggedUser: LoggedUser)
 
     data class LoggedUser(
-            @SerializedName("user") private var user: User)
+            @SerializedName("user") val user: User)
 }

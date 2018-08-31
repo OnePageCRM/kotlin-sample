@@ -23,16 +23,21 @@ fun main(args: Array<String>) {
     println("username: $username\npassword: $password\n")
 
     val onePageAPI = OnePageAPI.create()
-    var call = onePageAPI.loginAsync(LoginForm(username, password))
-    var response = call.execute()
+    val loginCall = onePageAPI.loginAsync(LoginForm(username, password))
+    val loginResponse = loginCall.execute()
 
-    var result: Any?
-
-    result = if (response.isSuccessful) {
-        response.body()
-    } else {
-        response.errorBody()
+    if (!loginResponse.isSuccessful) {
+        println("error: ${loginResponse.errorBody()}\n")
+        return
     }
 
-    println("result: $result\n")
+    val loginData = loginResponse.body()
+    val loggedUser = User(
+            loginData!!.data.userId,
+            loginData.data.authKey,
+            loginData.data.loggedUser.user.first,
+            loginData.data.loggedUser.user.last,
+            loginData.data.loggedUser.user.company)
+
+    println("loggedUser: $loggedUser\n")
 }

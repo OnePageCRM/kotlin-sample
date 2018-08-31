@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class Contact(
-        @SerializedName("id") private var id: String,
-        @SerializedName("first_name") private var first: String,
-        @SerializedName("last_name") private var last: String,
-        @SerializedName("company_name") private var company: String) {
+        @SerializedName("id") val id: String,
+        @SerializedName("first_name") val first: String,
+        @SerializedName("last_name") val last: String,
+        @SerializedName("company_name") val company: String) {
     init {
         require(id.isNotBlank()) { "Contact needs id to be valid" }
         require(last.isNotBlank() || company.isNotBlank()) { "Contact needs last or company to be valid" }

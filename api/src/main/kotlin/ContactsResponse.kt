@@ -6,14 +6,14 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class ContactsResponse(
-        @SerializedName("status") private val status: Int,
-        @SerializedName("message") private val message: String,
-        @SerializedName("timestamp") private val timestamp: Long,
-        @SerializedName("data") private val data: ContactsData) {
+        @SerializedName("status") val status: Int,
+        @SerializedName("message") val message: String,
+        @SerializedName("timestamp") val timestamp: Long,
+        @SerializedName("data") val data: ContactsData) {
 
     data class ContactsData(
-            @SerializedName("contacts") private var contacts: List<ContactWrapper>)
+            @SerializedName("contacts") val contacts: List<ContactWrapper>)
 
     data class ContactWrapper(
-            @SerializedName("contact") private var contact: Contact)
+            @SerializedName("contact") val contact: Contact)
 }

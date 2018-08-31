@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
  */
 
 data class LoginForm(
-        @SerializedName("login") private var username: String,
-        @SerializedName("password") private var password: String) {
+        @SerializedName("login") var username: String,
+        @SerializedName("password") var password: String) {
     init {
-        require(username.contains("@"), { "Username must be valid email address" })
-        require(password.length > 5, { "Password must be more than 5 chars" })
+        require(username.contains("@")) { "Username must be valid email address" }
+        require(password.length > 5) { "Password must be more than 5 chars" }
     }
 }
