@@ -1,11 +1,5 @@
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import java.io.FileInputStream
 import java.io.InputStream
-import java.net.HttpURLConnection.HTTP_CREATED
-import java.net.HttpURLConnection.HTTP_OK
 import java.util.*
 
 /**
@@ -16,9 +10,6 @@ import java.util.*
 const val INPUT_FILE = "sample/src/main/resources/config.properties"
 const val KEY_USERNAME = "username"
 const val KEY_PASSWORD = "password"
-
-val TYPE_JSON: MediaType = MediaType.parse("application/json")!!
-val client = OkHttpClient()
 
 fun main(args: Array<String>) {
 
@@ -31,36 +22,28 @@ fun main(args: Array<String>) {
 
     println("username: $username\npassword: $password\n")
 
-    val logged = doRequest(
-            "https://app.onepagecrm.com/api/v3/login.json",
-            "{\"login\":\"$username\",\"password\":\"$password\"}")
-}
+    val onePageAPI = OnePageAPI.create()
+    val loginCall = onePageAPI.loginAsync(LoginForm(username, password))
+    val loginResponse = loginCall.execute()
 
-fun doRequest(url: String, body: String): Boolean? {
-    val request: Request = if (body.isEmpty()) get(url) else post(url, body)
-    val response = client.newCall(request).execute()
+    if (!loginResponse.isSuccessful) {
+        println("error: ${loginResponse.errorBody()}\n")
+        return
+    }
 
-    println("********************")
-    println("URL: $url")
-    println("BODY: $body")
-    println("********************")
-    println("CODE: ${response.code()}")
-    println("BODY: ${response.body()?.string()}")
-    println("********************")
-    println()
+    val loginData = loginResponse.body()
+    val loggedUser = User(
+            loginData!!.data.userId,
+            loginData.data.authKey,
+            loginData.data.loggedUser.user.first,
+            loginData.data.loggedUser.user.last,
+            loginData.data.loggedUser.user.company)
 
-    return response.code() == HTTP_OK || response.code() == HTTP_CREATED
-}
+    println("loggedUser: $loggedUser\n")
 
-fun get(url: String): Request {
-    return Request.Builder()
-            .url(url)
-            .build()
-}
+    OnePageAPI.setAuthData(loggedUser.id, loggedUser.authKey)
 
-fun post(url: String, body: String): Request {
-    return Request.Builder()
-            .url(url)
-            .post(RequestBody.create(TYPE_JSON, body))
-            .build()
+    val contactsCall = onePageAPI.contactsAsync()
+    val contactsResponse = contactsCall.execute()
+    println("contacts: $contactsResponse\n")
 }

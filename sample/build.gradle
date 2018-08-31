@@ -7,7 +7,11 @@ apply plugin: 'kotlin'
 dependencies {
     implementation "$deps.kotlinstdlib:$versions.kotlin"
     testImplementation group: 'junit', name: 'junit', version: "$versions.junit"
+    // Network requests
     implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    // Use API module
+    implementation project(':api')
 }
 
 sourceCompatibility = versions.java
