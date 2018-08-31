@@ -91,4 +91,10 @@ interface OnePageAPI {
 
     @GET("contacts.json")
     fun contactsAsync(): Call<ContactsResponse>
+
+    @POST("contacts.json")
+    fun contacts(@Body contactForm: ContactForm): ContactResponse
+
+    @POST("contacts.json")
+    fun contactsAsync(@Body contactForm: ContactForm): Call<ContactResponse>
 }

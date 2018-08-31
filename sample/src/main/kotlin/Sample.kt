@@ -45,5 +45,10 @@ fun main(args: Array<String>) {
 
     val contactsCall = onePageAPI.contactsAsync()
     val contactsResponse = contactsCall.execute()
-    println("contacts: $contactsResponse\n")
+    println("contacts: ${contactsResponse.body()}\n")
+
+    val contactForm = ContactForm("Kotlin", "Sample", "OnePageCRM")
+    val contactCall = onePageAPI.contactsAsync(contactForm)
+    val contactResponse = contactCall.execute()
+    println("contact: ${contactResponse.body()}\n")
 }
