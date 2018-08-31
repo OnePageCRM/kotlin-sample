@@ -1,3 +1,4 @@
+import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -30,17 +31,15 @@ interface OnePageAPI {
         private const val AUTHORIZATION_HEADER = "Authorization"
 
         // Authentication
-        var userId = null
-        var authKey = null
+        var userId: String = ""
+        var authKey: String = ""
 
         fun create(): OnePageAPI {
-
             val retrofit = Retrofit.Builder()
                     .baseUrl(API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client())
                     .build()
-
             return retrofit.create(OnePageAPI::class.java)
         }
 
@@ -71,8 +70,13 @@ interface OnePageAPI {
             }
         }
 
+        fun setAuthData(userId: String, authKey: String) {
+            this.userId = userId
+            this.authKey = authKey
+        }
+
         private fun authentication(): String {
-            return "Basic XYZ" // TODO: implement proper basic auth
+            return if (userId.isNotEmpty() && authKey.isNotEmpty()) Credentials.basic(userId, authKey) else ""
         }
     }
 

@@ -40,4 +40,11 @@ fun main(args: Array<String>) {
             loginData.data.loggedUser.user.company)
 
     println("loggedUser: $loggedUser\n")
+
+    OnePageAPI.setAuthData(loggedUser.id, loggedUser.authKey)
+
+    val contactsCall = onePageAPI.contactsAsync()
+    val contactsResponse = contactsCall.execute()
+    println("contacts: $contactsResponse\n")
+
 }
