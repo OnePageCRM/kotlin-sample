@@ -1,3 +1,4 @@
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -16,24 +17,62 @@ interface OnePageAPI {
 
     companion object Factory {
 
+        // URLs
         private const val BASE_URL = "https://app.onepagecrm.com"
         private const val API_URL = "$BASE_URL/api/v3/"
+
+        // Headers
+        private const val USER_AGENT_HEADER = "User-Agent"
+        private val SYSTEM_USER_AGENT = System.getProperty("http.agent")
+        private val USER_AGENT = if (SYSTEM_USER_AGENT.isNullOrEmpty()) "Java/1.8" else SYSTEM_USER_AGENT
+        private const val SOURCE_HEADER = "X-OnePageCRM-SOURCE"
+        private const val SOURCE = "kotlin-sample"
+        private const val AUTHORIZATION_HEADER = "Authorization"
+
+        // Authentication
+        var userId = null
+        var authKey = null
 
         fun create(): OnePageAPI {
 
             val retrofit = Retrofit.Builder()
                     .baseUrl(API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(logger())
+                    .client(client())
                     .build()
 
             return retrofit.create(OnePageAPI::class.java)
         }
 
-        private fun logger(): OkHttpClient {
+        private fun client(): OkHttpClient {
+            return OkHttpClient.Builder()
+                    .addInterceptor(logger())
+                    .addInterceptor(headers())
+                    .build()
+        }
+
+        private fun logger(): Interceptor {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
-            return OkHttpClient.Builder().addInterceptor(interceptor).build()
+            return interceptor
+        }
+
+        private fun headers(): Interceptor {
+            return Interceptor {
+                val request = it.request().newBuilder()
+                        .addHeader(USER_AGENT_HEADER, USER_AGENT)
+                        .addHeader(SOURCE_HEADER, SOURCE)
+                        .addHeader(AUTHORIZATION_HEADER, authentication())
+                        .build()
+                println("$USER_AGENT_HEADER: $USER_AGENT")
+                println("$SOURCE_HEADER: $SOURCE")
+                println("$AUTHORIZATION_HEADER: ${authentication()}")
+                it.proceed(request)
+            }
+        }
+
+        private fun authentication(): String {
+            return "Basic XYZ" // TODO: implement proper basic auth
         }
     }
 
