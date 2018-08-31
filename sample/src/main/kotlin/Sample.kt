@@ -24,8 +24,8 @@ fun main(args: Array<String>) {
 
     // Log in
     val onePageAPI = OnePageAPI.create()
-    val loginCall = onePageAPI.loginAsync(LoginForm(username, password))
-    val loginResponse = loginCall.execute()
+    val loginForm = LoginForm(username, password)
+    val loginResponse = onePageAPI.loginAsync(loginForm).execute()
 
     if (!loginResponse.isSuccessful) {
         println("error: ${loginResponse.errorBody()}\n")
@@ -42,17 +42,15 @@ fun main(args: Array<String>) {
 
     println("loggedUser: $loggedUser\n")
 
-    // Set up data for authentication
+    // Set up data for authentication for future requests
     OnePageAPI.setAuthData(loggedUser.id, loggedUser.authKey)
 
     // List contacts
-    val contactsCall = onePageAPI.contactsAsync()
-    val contactsResponse = contactsCall.execute()
+    val contactsResponse = onePageAPI.contactsAsync().execute()
     println("contacts: ${contactsResponse.body()}\n")
 
-    // Save contact
+    // Save a new contact
     val contactForm = ContactForm("Kotlin", "Sample", "OnePageCRM")
-    val contactCall = onePageAPI.contactsAsync(contactForm)
-    val contactResponse = contactCall.execute()
+    val contactResponse = onePageAPI.contactsAsync(contactForm).execute()
     println("contact: ${contactResponse.body()}\n")
 }
