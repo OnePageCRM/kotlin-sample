@@ -16,12 +16,6 @@ import retrofit2.http.POST
 
 interface OnePageAPI {
 
-    @POST("login.json")
-    fun login(@Body loginForm: LoginForm): LoginResponse
-
-    @POST("login.json")
-    fun loginAsync(@Body loginForm: LoginForm): Call<LoginResponse>
-
     @GET("contacts.json")
     fun contacts(): ContactsResponse
 

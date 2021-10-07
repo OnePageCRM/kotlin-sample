@@ -8,8 +8,8 @@ import java.util.*
  */
 
 const val INPUT_FILE = "sample/src/main/resources/config.properties"
-const val KEY_USERNAME = "username"
-const val KEY_PASSWORD = "password"
+const val KEY_USER_ID = "userId"
+const val KEY_AUTH_KEY = "authKey"
 
 fun main(args: Array<String>) {
 
@@ -17,33 +17,15 @@ fun main(args: Array<String>) {
     val input: InputStream = FileInputStream(INPUT_FILE)
     properties.load(input)
 
-    val username = properties.getProperty(KEY_USERNAME)
-    val password = properties.getProperty(KEY_PASSWORD)
+    val userId = properties.getProperty(KEY_USER_ID)
+    val authKey = properties.getProperty(KEY_AUTH_KEY)
 
-    println("username: $username\npassword: $password\n")
+    println("userId: $userId\nauthKey: $authKey\n")
 
-    // Log in
+    // Initialize
     val onePageAPI = OnePageAPI.create()
-    val loginForm = LoginForm(username, password)
-    val loginResponse = onePageAPI.loginAsync(loginForm).execute()
-
-    if (!loginResponse.isSuccessful) {
-        println("error: ${loginResponse.errorBody()}\n")
-        return
-    }
-
-    val loginData = loginResponse.body()
-    val loggedUser = User(
-            loginData!!.data.userId,
-            loginData.data.authKey,
-            loginData.data.loggedUser.user.first,
-            loginData.data.loggedUser.user.last,
-            loginData.data.loggedUser.user.company)
-
-    println("loggedUser: $loggedUser\n")
-
     // Set up data for authentication for future requests
-    OnePageAPI.setAuthData(loggedUser.id, loggedUser.authKey)
+    OnePageAPI.setAuthData(userId, authKey)
 
     // List contacts
     val contactsResponse = onePageAPI.contactsAsync().execute()
