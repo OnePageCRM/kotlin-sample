@@ -4,8 +4,8 @@ Connect and interface with the OnePageCRM API using Kotlin :+1:
 # todo
 1) Create file called `config.properties` with the following contents
 ```
-username=YOUR_EMAIL_ADDRESS_HERE
-password=YOUR_PASSWORD_HERE
+userId=YOUR_API_USER_ID_HERE
+authKey=YOUR_API_AUTH_KEY_HERE
 ```
 
 2) Place the file into the directory `./sample/src/main/resources/`
